@@ -21,7 +21,6 @@ const axiosInstance = axios.create({
 });
 
 const getImagesByQuery = async (q, page = 1) => {
-  console.log('pixabayApi.getImagesByQuery: ', q);
   try {
     const result = await axiosInstance.get('/', {
       params: {
@@ -39,7 +38,6 @@ const getImagesByQuery = async (q, page = 1) => {
     );
     const quantityImages = result.data.totalHits;
 
-    console.log('fetch result', result);
     if (result.data.totalHits === 0 && result.status === 200) {
       throw new Error('Images not found');
     }

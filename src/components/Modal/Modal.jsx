@@ -9,13 +9,9 @@ export default class Modal extends Component {
     closeModal: PropTypes.func.isRequired,
   };
   keyUpHandler = () => {
-    console.log('keyUp event fired');
     this.props.closeModal();
-    // console.log(e);
   };
   componentDidMount() {
-    console.log('Modal mounted');
-    console.log('this', this);
     window.addEventListener('keyup', this.keyUpHandler);
   }
   componentWillUnmount() {

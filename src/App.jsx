@@ -1,13 +1,12 @@
 import React from 'react';
 import { Oval } from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-import Searchbar from 'components/Searchbar/Searchbar';
 import pixabayApi from 'api/pixabay';
+import Searchbar from 'components/Searchbar/Searchbar';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
 import Button from 'components/Button/Button';
+import Modal from 'components/Modal/Modal';
 import css from './App.module.css';
-// import './App.module.css';
-import Modal from './components/Modal/Modal';
 
 export default class App extends React.Component {
   state = {
@@ -28,8 +27,6 @@ export default class App extends React.Component {
     ) {
       try {
         this.setState({ status: 'pending' });
-        console.log('searchQuery', searchQuery);
-        //
         const getImagesByQueryResult = await pixabayApi(
           searchQuery,
           searchPage
@@ -39,17 +36,10 @@ export default class App extends React.Component {
           totalImages: getImagesByQueryResult.total,
           status: 'resolved',
         });
-
-        // console.log(getImagesByQueryResult);
       } catch (error) {
-        console.log('Error!!!: ', error.message);
         this.setState({ error, status: 'rejected' });
-        // throw new Error(error);
       }
-      if (
-        prevState.searchQuery === searchQuery &&
-        prevState.searchPage !== searchPage
-      ) {
+      if (searchPage > 1) {
         const scrollOffset = window.document.body.offsetHeight - 155;
         setTimeout(() => {
           window.scroll({
@@ -69,46 +59,28 @@ export default class App extends React.Component {
       searchPage: 1,
       images: [],
     });
-
-    // console.log('submitHandler in App called:', searchQuery);
   };
   loadMoreHandler = () => {
-    console.log('loadMore clicked');
     this.setState(prev => ({
       searchPage: prev.searchPage + 1,
     }));
-    //   const { height: cardHeight } = document
-    // .querySelector(".gallery")
-    // .firstElementChild.getBoundingClientRect();
   };
   openModal = e => {
-    console.log('Open modal called');
-    // console.log(e.currentTarget.dataset.largeimageurl);
     this.setState({
       showModal: true,
       modalImageURL: e.currentTarget.dataset.largeimageurl,
     });
   };
   closeModal = () => {
-    console.log('close modal called');
     this.setState({
       showModal: false,
     });
   };
 
   render() {
-    const {
-      images,
-      totalImages,
-      status,
-      searchPage,
-      error,
-      showModal,
-      modalImageURL,
-    } = this.state;
+    const { images, totalImages, status, error, showModal, modalImageURL } =
+      this.state;
     const showLoadMoreButton = images.length > 0 && images.length < totalImages;
-    // const isNoImages = images.length === 0;
-    console.log('page:', searchPage);
     return (
       <div className={css['App']}>
         <Searchbar onSubmit={this.submitHandler} />
@@ -121,7 +93,6 @@ export default class App extends React.Component {
             wrapperStyle={{ justifyContent: 'center' }}
           />
         )}
-        {/* {status === 'resolved' && <ImageGallery images={images} />} */}
         {status === 'resolved' && showLoadMoreButton && (
           <Button onClick={this.loadMoreHandler} />
         )}
@@ -132,22 +103,10 @@ export default class App extends React.Component {
           <Modal
             largeImageURL={modalImageURL}
             closeModal={this.closeModal}
-            alt="12"
+            alt="image"
           />
         )}
       </div>
-      // <div
-      //   style={{
-      //     height: '100vh',
-      //     display: 'flex',
-      //     justifyContent: 'center',
-      //     alignItems: 'center',
-      //     fontSize: 40,
-      //     color: '#010101'
-      //   }}
-      // >
-      //   React homework template
-      // </div>
     );
   }
 }
