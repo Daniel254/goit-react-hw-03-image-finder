@@ -1,13 +1,6 @@
-// https://pixabay.com/api/?q=cat&page=1&key=your_key&image_type=photo&orientation=horizontal&per_page=12
-// defaults:
-//   page 1
-//   per_page 12
-//   id - уникальный идентификатор
-// webformatURL - ссылка на маленькое изображение для списка карточек
-// largeImageURL
+import { API_KEY } from 'constants/pixabay';
 
 import axios from 'axios';
-const API_KEY = '27666990-12b4bba2fe6e2b052765abd44';
 
 const axiosInstance = axios.create({
   baseURL: 'https://pixabay.com/api',
@@ -38,7 +31,7 @@ const getImagesByQuery = async (q, page = 1) => {
     );
     const quantityImages = result.data.totalHits;
 
-    if (result.data.totalHits === 0 && result.status === 200) {
+    if (result.data.totalHits === 0) {
       throw new Error('Images not found');
     }
     return {

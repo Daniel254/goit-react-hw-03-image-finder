@@ -32,14 +32,24 @@ export default class App extends React.Component {
           searchPage
         );
         this.setState({
-          images: [...images, ...getImagesByQueryResult.images],
+          images:
+            searchPage === 1
+              ? [...getImagesByQueryResult.images]
+              : [...images, ...getImagesByQueryResult.images],
           totalImages: getImagesByQueryResult.total,
           status: 'resolved',
         });
       } catch (error) {
         this.setState({ error, status: 'rejected' });
       }
-      if (searchPage > 1) {
+      if (searchPage === 1) {
+        setTimeout(() => {
+          window.scroll({
+            top: 0,
+            behavior: 'smooth',
+          });
+        });
+      } else if (searchPage > 1) {
         const scrollOffset = window.document.body.offsetHeight - 155;
         setTimeout(() => {
           window.scroll({
@@ -57,7 +67,6 @@ export default class App extends React.Component {
     this.setState({
       searchQuery: newSearchQuery,
       searchPage: 1,
-      images: [],
     });
   };
   loadMoreHandler = () => {
@@ -94,7 +103,7 @@ export default class App extends React.Component {
           />
         )}
         {status === 'resolved' && showLoadMoreButton && (
-          <Button onClick={this.loadMoreHandler} />
+          <Button onClick={this.loadMoreHandler} label="Load more" />
         )}
         {status === 'rejected' && (
           <h1 style={{ textAlign: 'center' }}>{error.message}</h1>
