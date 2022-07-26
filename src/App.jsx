@@ -74,10 +74,10 @@ export default class App extends React.Component {
       searchPage: prev.searchPage + 1,
     }));
   };
-  openModal = e => {
+  openModal = largeImageURL => {
     this.setState({
       showModal: true,
-      modalImageURL: e.currentTarget.dataset.largeimageurl,
+      modalImageURL: largeImageURL,
     });
   };
   closeModal = () => {

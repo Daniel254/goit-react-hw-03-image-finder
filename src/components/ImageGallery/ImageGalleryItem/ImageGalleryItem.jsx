@@ -14,8 +14,7 @@ export default class ImageGalleryItem extends Component {
     return (
       <li
         className={css['ImageGalleryItem']}
-        data-largeimageurl={largeImageURL}
-        onClick={openModal}
+        onClick={() => openModal(largeImageURL)}
       >
         <img
           src={thumbImageURL}
